@@ -8,9 +8,10 @@ declare -A URLS
 path=""
 url=""
 while IFS= read -r line || [[ -n "$line" ]]; do
+  line="${line#"${line%%[![:space:]]*}"}"
   case "$line" in
-    path\ =*) path="${line#path = }" ;;
-    url\ =*)
+    path\ =\ *) path="${line#path = }" ;;
+    url\ =\ *)
       url="${line#url = }"
       URLS["$path"]="$url"
       ;;
