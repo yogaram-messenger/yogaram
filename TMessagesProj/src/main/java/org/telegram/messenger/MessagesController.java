@@ -25413,6 +25413,11 @@ public class MessagesController extends BaseController implements NotificationCe
     private final CacheFetcher<Void, TL_account.TL_webBrowserSettings> webBrowserSettingsFetcher = new CacheFetcher<Void, TL_account.TL_webBrowserSettings>(60 * 60 * 1000) {
         @Override
         protected void getRemote(int currentAccount, Void arguments, long hash, Utilities.Callback4<Boolean, TL_account.TL_webBrowserSettings, Long, Boolean> onResult) {
+            if (true) {
+                // Nandagram: Opengram не знает account.getWebBrowserSettings; неизвестный метод ломал весь msg_container
+                onResult.run(false, null, 0L, false);
+                return;
+            }
             final TL_account.getWebBrowserSettings req = new TL_account.getWebBrowserSettings();
             req.hash = hash;
             getConnectionsManager().sendRequestTyped(req, AndroidUtilities::runOnUIThread, (res, err) -> {

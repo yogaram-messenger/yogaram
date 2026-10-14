@@ -1,35 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item>
-        <shape>
-            <gradient
-                android:type="linear"
-                android:angle="-45"
-                android:startColor="#FC5DDC"
-                android:endColor="#9484FF" />
-        </shape>
-    </item>
-    <item>
-        <shape>
-            <gradient
-                android:type="radial"
-                android:gradientRadius="65%p"
-                android:centerX="1"
-                android:centerY="0"
-                android:startColor="#ffF4817F"
-                android:endColor="#00F4817F" />
-        </shape>
-    </item>
-    <item>
-        <shape>
-            <gradient
-                android:type="radial"
-                android:gradientRadius="80%p"
-                android:centerX="0"
-                android:centerY="1"
-                android:startColor="#ff5381FE"
-                android:centerColor="#925381FE"
-                android:endColor="#005381FE" />
-        </shape>
-    </item>
-</layer-list>
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="108dp" android:height="108dp" android:viewportWidth="108" android:viewportHeight="108">
+    <path android:pathData="M0,0h108v108h-108z" android:fillColor="#0f1638"/>
+    <path android:pathData="M54,54m-60,0a60,60 0,1 1,120 0a60,60 0,1 1,-120 0" android:fillColor="#22306b" android:fillAlpha="0.85"/>
+</vector>
