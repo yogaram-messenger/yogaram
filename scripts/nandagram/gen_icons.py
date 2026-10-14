@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Генератор иконок Nandagram: золотая вайшнавская тилака (урдхва-пундра) на тёмно-синем фоне.
+"""Генератор иконок Nandagram: золотая вайшнавская тилака (урдхва-пундра, U) с золотым листом туласи, без центральной полосы, на тёмно-синем фоне.
 Использование: gen_icons.py <корень репозитория>"""
 import sys, os, re, io, glob
 import cairosvg
@@ -10,7 +10,6 @@ RED = "#d6402a"
 # 108x108 (adaptive safe zone 21..87)
 TILAK = '''
 <path d="M40,26 L40,50 A14,14 0 0 0 68,50 L68,26" fill="none" stroke="{g}" stroke-width="8" stroke-linecap="round"/>
-<path d="M54,30 L54,58" fill="none" stroke="{r}" stroke-width="4.5" stroke-linecap="round"/>
 <path d="M54,70 C61,74 61,82 54,88 C47,82 47,74 54,70 Z" fill="{g}"/>
 <path d="M54,73 L54,85" stroke="{v}" stroke-width="1.2" stroke-linecap="round"/>
 '''
@@ -43,7 +42,6 @@ def kind_of(name):
     return None
 VEC_FG = '''<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="108dp" android:height="108dp" android:viewportWidth="108" android:viewportHeight="108">
     <path android:pathData="M40,26 L40,50 A14,14 0 0 0 68,50 L68,26" android:strokeColor="{g}" android:strokeWidth="8" android:strokeLineCap="round"/>
-    <path android:pathData="M54,30 L54,58" android:strokeColor="{r}" android:strokeWidth="4.5" android:strokeLineCap="round"/>
     <path android:pathData="M54,70 C61,74 61,82 54,88 C47,82 47,74 54,70 Z" android:fillColor="{g}"/>
 </vector>
 '''
