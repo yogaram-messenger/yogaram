@@ -69,3 +69,12 @@ APK: `TMessagesProj_App/build/outputs/apk/afat/debug/app.apk`.
 ## Если сборка в этой среде не дошла до APK
 
 Исходники уже переключены на Opengram. Чтобы получить APK локально, остаются только шаги выше: поставить SDK/NDK/CMake, выполнить `scripts/init-submodules.sh` (сабмодули в git не вложены, пины в `submodule-pins.txt`) и запустить `assembleAfatDebug`. Нативная сборка tgcalls, webrtc и absl долгая и требует несколько гигабайт диска и памяти Gradle (`org.gradle.jvmargs` уже `-Xmx8g`).
+
+## Брендинг Nandagram Goloka Messenger (ветка feature/nandagram-branding)
+
+- `scripts/nandagram/branding.py` — полный `values-ru/strings.xml` из официального экспорта translations.telegram.org (`scripts/nandagram/ru_android_export.xml`), замена пользовательского «Telegram» на «Nandagram Goloka Messenger» во всех `values*/strings.xml` (плейсхолдеры, URL, @-имена не трогаются), `AppName`/`AppNameBeta` = `Nandagram`.
+- `scripts/nandagram/gen_icons.py` — иконка (золотая тилака урдхва-пундра на тёмно-синем фоне) генерируется из SVG: адаптивные fg/bg, legacy и round mipmap, монохромная, уведомления, все альтернативные иконки. Требует `pip install cairosvg pillow`.
+- `IntroActivity` — заголовок первой страницы: «Nandagram», ниже «Goloka Messenger» шрифтом в 3 раза меньше.
+- Русский интерфейс включается автоматически при системном языке ru (встроенный ru LocaleInfo + values-ru); сервер Opengram тоже отдаёт ru/en langpack.
+
+Сборка на сервере 46.8.46.56: `/srv/nandagram-build/build.sh` (Docker-образ `nandagram-builder:1`).
