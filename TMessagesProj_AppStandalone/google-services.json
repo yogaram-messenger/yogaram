@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "100000000000",
+    "project_id": "yogaram-stub",
+    "storage_bucket": "yogaram-stub.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:100000000000:android:yogaramstub0000",
+        "android_client_info": {
+          "package_name": "ru.myfbt.yogaram"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyYogaRamStubKeyNotARealSecret000"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:100000000000:android:yogaramstub0001",
+        "android_client_info": {
+          "package_name": "ru.myfbt.yogaram.beta"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyYogaRamStubKeyNotARealSecret000"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:100000000000:android:yogaramstub0002",
+        "android_client_info": {
+          "package_name": "ru.myfbt.yogaram.web"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyYogaRamStubKeyNotARealSecret000"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
