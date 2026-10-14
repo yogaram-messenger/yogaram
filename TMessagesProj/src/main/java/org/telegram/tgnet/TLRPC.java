@@ -6858,6 +6858,15 @@ public class TLRPC {
         }
 
         public void serializeToStream(OutputSerializedData stream) {
+            if (!hasFlag(flags, FLAG_0) || note == null) {
+                // Nandagram: Opengram (layer 216) знает только старый inputPhoneContact#f392b7f4
+                stream.writeInt32(0xf392b7f4);
+                stream.writeInt64(client_id);
+                stream.writeString(phone);
+                stream.writeString(first_name);
+                stream.writeString(last_name);
+                return;
+            }
             stream.writeInt32(constructor);
             stream.writeInt32(flags);
             stream.writeInt64(client_id);
@@ -51232,8 +51241,12 @@ public class TLRPC {
         }
 
         public void serializeToStream(OutputSerializedData stream) {
-            stream.writeInt32(constructor);
             flags = setFlag(flags, FLAG_0, add_phone_privacy_exception);
+            if (note == null) {
+                flags &= ~FLAG_1;
+            }
+            // Nandagram: без заметки шлём старый contacts.addContact#e8f463d0 (layer 216), формат тот же
+            stream.writeInt32(hasFlag(flags, FLAG_1) ? constructor : 0xe8f463d0);
             stream.writeInt32(flags);
             id.serializeToStream(stream);
             stream.writeString(first_name);
