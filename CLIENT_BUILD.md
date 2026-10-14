@@ -62,6 +62,8 @@ chmod +x gradlew
 
 APK: `TMessagesProj_App/build/outputs/apk/afat/debug/app.apk`.
 
+Проверенная сборка в этой среде: `assembleAfatDebug` завершилась успешно. Пакет `ru.myfbt.yogaram`, имя YogaRam, versionName `13.0.2`, native ABI `arm64-v8a`, `armeabi-v7a`, `x86`, `x86_64`. Заглушка `google-services.json` содержит и `ru.myfbt.yogaram`, и `org.telegram.messenger`: плагин Google Services в библиотечном модуле сверяет package с namespace библиотеки.
+
 Свой `api_id` / `api_hash` задаются в `gradle.properties` (`YOGARAM_APP_ID`, `YOGARAM_APP_HASH`) до сборки.
 
 ## Если сборка в этой среде не дошла до APK
