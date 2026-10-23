@@ -2991,6 +2991,17 @@ public class LocaleController {
             }
             return;
         }
+        // A full snapshot this small is not a usable langpack (Opengram does not
+        // serve Telegram's). Keep the bundled translation instead of replacing it.
+        if (difference.from_version == 0 && difference.strings.size() < 800) {
+            FileLog.d("saveRemoteLocaleStrings: ignoring short langpack (" + difference.strings.size() + " strings) for " + difference.lang_code);
+            recreateFormatters();
+            NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.reloadInterface);
+            if (onDone != null) {
+                onDone.run();
+            }
+            return;
+        }
         final String langCode = difference.lang_code.replace('-', '_').toLowerCase();
         int type;
         if (langCode.equals(localeInfo.shortName)) {

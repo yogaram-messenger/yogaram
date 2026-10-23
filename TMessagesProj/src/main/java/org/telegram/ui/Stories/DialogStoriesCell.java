@@ -83,6 +83,7 @@ import org.telegram.ui.Components.CombinedDrawable;
 import org.telegram.ui.Components.CubicBezierInterpolator;
 import org.telegram.ui.Components.EllipsizeSpanAnimator;
 import org.telegram.ui.Components.LayoutHelper;
+import org.telegram.ui.Components.NandagramHeaderDrawable;
 import org.telegram.ui.Components.ListView.AdapterWithDiffUtils;
 import org.telegram.ui.Components.Premium.LimitReachedBottomSheet;
 import org.telegram.ui.Components.RadialProgress;
@@ -334,12 +335,15 @@ public class DialogStoriesCell extends FrameLayout implements NotificationCenter
 
         telegramLogoView = new ImageView(context);
         telegramLogoView.setContentDescription(getString(R.string.AppName));
-        telegramLogoView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-        telegramLogoView.setImageResource(R.drawable.telegram_logo_2);
-        telegramLogoView.setColorFilter(getTextLogoColor(), PorterDuff.Mode.MULTIPLY);
+        telegramLogoView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        NandagramHeaderDrawable headerMark = new NandagramHeaderDrawable(context, dp(14), dp(26));
+        headerMark.setColorFilter(getTextLogoColor(), PorterDuff.Mode.MULTIPLY);
+        telegramLogoView.setImageDrawable(headerMark);
         telegramLogoView.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_YES);
         telegramLogoView.setFocusableInTouchMode(true);
-        addView(telegramLogoView, LayoutHelper.createFrame(90, 22));
+        int wordmarkWidth = Math.max(1, Math.round(headerMark.getIntrinsicWidth() / AndroidUtilities.density));
+        int wordmarkHeight = Math.max(1, Math.round(headerMark.getIntrinsicHeight() / AndroidUtilities.density));
+        addView(telegramLogoView, LayoutHelper.createFrame(wordmarkWidth, wordmarkHeight));
 
         statusDrawable = new AnimatedEmojiDrawable.SwapAnimatedEmojiDrawable(null, dp(26));
         statusDrawable.center = true;
@@ -1156,7 +1160,9 @@ public class DialogStoriesCell extends FrameLayout implements NotificationCenter
         if (subtitleOverlayContainer != null) {
             subtitleOverlayContainer.updateColors();
         }
-        telegramLogoView.setColorFilter(getTextLogoColor(), PorterDuff.Mode.MULTIPLY);
+        if (telegramLogoView.getDrawable() != null) {
+            telegramLogoView.getDrawable().setColorFilter(getTextLogoColor(), PorterDuff.Mode.MULTIPLY);
+        }
         AndroidUtilities.forEachViews(recyclerListView, view -> {
             StoryCell cell = (StoryCell) view;
             cell.invalidate();
