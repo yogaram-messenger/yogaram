@@ -2,6 +2,7 @@
 .gradle/
 build/
 obj/
+server/**/bin/
 *.iml
 local.properties
 TMessagesProj/.cxx/

@@ -1,0 +1,19 @@
+{
+  "App": {
+    "EnableEmailLogin": true,
+    "SetupPasswordRequired": true,
+    "FixedVerifyCode": "",
+    "FixedEmailVerificationCode": "",
+    "VerificationCodeLength": 5,
+    "Email": {
+      "Host": "smtp.example.com",
+      "Port": 587,
+      "EnableSsl": true,
+      "UserName": "nandagram@example.com",
+      "Password": "",
+      "FromAddress": "nandagram@example.com",
+      "FromName": "Nandagram",
+      "StorePath": "/data/nandagram-emails.json"
+    }
+  }
+}
