@@ -6899,7 +6899,7 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
                                 finishFragment();
                                 emailChangeFinishCallback.run();
                             } else if (response instanceof TL_account.TL_emailVerifiedLogin) {
-                                fillNextCodeParams(params, ((TL_account.TL_emailVerifiedLogin) response).sent_code);
+                                submitConfirmedEmailCode(params, finalCode);
                             } else if (response instanceof TLRPC.TL_auth_authorization) {
                                 onAuthSuccess((TLRPC.TL_auth_authorization) response);
                             }
@@ -6966,6 +6966,67 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
                     }
                 }
                 googleAccount = null;
+            }), ConnectionsManager.RequestFlagFailOnServerErrors | ConnectionsManager.RequestFlagWithoutLogin);
+        }
+
+        private void submitConfirmedEmailCode(Bundle params, String code) {
+            TLRPC.TL_auth_signIn request = new TLRPC.TL_auth_signIn();
+            request.phone_number = requestPhone;
+            request.phone_code_hash = phoneHash;
+            TLRPC.TL_emailVerificationCode verification = new TLRPC.TL_emailVerificationCode();
+            verification.code = code;
+            request.email_verification = verification;
+            request.flags |= 2;
+            nextPressed = true;
+            needShowProgress(0);
+            ConnectionsManager.getInstance(currentAccount).sendRequest(request, (response, error) -> AndroidUtilities.runOnUIThread(() -> {
+                needHideProgress(false);
+                nextPressed = false;
+                if (error == null) {
+                    if (response instanceof TLRPC.TL_auth_authorizationSignUpRequired) {
+                        TLRPC.TL_auth_authorizationSignUpRequired authorization = (TLRPC.TL_auth_authorizationSignUpRequired) response;
+                        if (authorization.terms_of_service != null) {
+                            currentTermsOfService = authorization.terms_of_service;
+                        }
+                        setPage(VIEW_REGISTER, true, params, false);
+                    } else if (response instanceof TLRPC.TL_auth_authorization) {
+                        onAuthSuccess((TLRPC.TL_auth_authorization) response);
+                    }
+                    return;
+                }
+                if (error.text != null && error.text.contains("SESSION_PASSWORD_NEEDED")) {
+                    TL_account.getPassword req2 = new TL_account.getPassword();
+                    ConnectionsManager.getInstance(currentAccount).sendRequest(req2, (response1, error1) -> AndroidUtilities.runOnUIThread(() -> {
+                        if (error1 == null) {
+                            TL_account.Password password = (TL_account.Password) response1;
+                            if (!TwoStepVerificationActivity.canHandleCurrentPassword(password, true)) {
+                                AlertsCreator.showUpdateAppAlert(getParentActivity(), getString("UpdateAppAlert", R.string.UpdateAppAlert), true);
+                                return;
+                            }
+                            Bundle bundle = new Bundle();
+                            SerializedData data = new SerializedData(password.getObjectSize());
+                            password.serializeToStream(data);
+                            bundle.putString("password", Utilities.bytesToHex(data.toByteArray()));
+                            bundle.putString("phoneFormated", requestPhone);
+                            bundle.putString("phoneHash", phoneHash);
+                            bundle.putString("code", code);
+                            setPage(VIEW_PASSWORD, true, bundle, false);
+                        } else {
+                            needShowAlert(getString(R.string.RestorePasswordNoEmailTitle), error1.text);
+                        }
+                    }), ConnectionsManager.RequestFlagFailOnServerErrors | ConnectionsManager.RequestFlagWithoutLogin);
+                    return;
+                }
+                showDoneButton(false, true);
+                if (error.text != null && (error.text.contains("CODE_INVALID") || error.text.contains("PHONE_CODE_INVALID") || error.text.contains("CODE_EMPTY"))) {
+                    shakeWrongCode();
+                } else if (error.text != null && (error.text.contains("PHONE_CODE_EXPIRED") || error.text.contains("EMAIL_VERIFY_EXPIRED"))) {
+                    onBackPressed(true);
+                    setPage(VIEW_PHONE_INPUT, true, null, true);
+                    needShowAlert(getString(R.string.RestorePasswordNoEmailTitle), getString("CodeExpired", R.string.CodeExpired));
+                } else {
+                    needShowAlert(getString(R.string.RestorePasswordNoEmailTitle), getString("ErrorOccurred", R.string.ErrorOccurred) + "\n" + (error.text == null ? "" : error.text));
+                }
             }), ConnectionsManager.RequestFlagFailOnServerErrors | ConnectionsManager.RequestFlagWithoutLogin);
         }
 
