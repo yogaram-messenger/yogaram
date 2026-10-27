@@ -129,7 +129,8 @@ target_compile_options(tgnet PUBLIC
 set_target_properties(tgnet PROPERTIES
         ANDROID_ARM_MODE arm)
 target_compile_definitions(tgnet PUBLIC
-        HAVE_PTHREAD)
+        HAVE_PTHREAD
+        VK_TUNNEL=1)
 target_include_directories(tgnet PUBLIC
         third_party/boringssl/include
         openssl/include)

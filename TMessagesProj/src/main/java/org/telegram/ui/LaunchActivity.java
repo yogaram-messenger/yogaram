@@ -6969,6 +6969,9 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
     @Override
     protected void onResume() {
         super.onResume();
+        if (org.telegram.messenger.BuildConfig.VK_TUNNEL && !org.telegram.messenger.vk.VkTunnel.isPaired()) {
+            startActivity(new android.content.Intent(this, org.telegram.messenger.vk.VkPairActivity.class));
+        }
         isResumed = true;
         pipActivityHandler.onResume();
         if (onResumeStaticCallback != null) {

@@ -113,6 +113,13 @@
     >
         <!-- usesCleartextTraffic for browser supporting opening http:// links -->
 
+        <activity
+            android:name="org.telegram.messenger.vk.VkPairActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|smallestScreenSize|screenLayout|uiMode"
+            android:exported="false"
+            android:theme="@android:style/Theme.DeviceDefault.Light.NoActionBar"
+            android:windowSoftInputMode="adjustResize" />
+
         <activity-alias
             android:enabled="true"
             android:name="org.telegram.messenger.DefaultIcon"
