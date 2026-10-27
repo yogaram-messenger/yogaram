@@ -76,10 +76,12 @@ void Connection::onReceivedData(NativeByteBuffer *buffer) {
     if (connectionType == ConnectionTypeGeneric || connectionType == ConnectionTypeTemp || connectionType == ConnectionTypeGenericMedia) {
         receivedDataAmount += buffer->limit();
         if (receivedDataAmount >= 512 * 1024) {
+#ifndef VK_TUNNEL
             if (currentTimeout > 4) {
                 currentTimeout -= 2;
                 setTimeout(currentTimeout);
             }
+#endif
             receivedDataAmount = 0;
         }
     }
@@ -128,6 +130,15 @@ void Connection::onReceivedData(NativeByteBuffer *buffer) {
         if (!hasSomeDataSinceLastConnect) {
             currentDatacenter->storeCurrentAddressAndPortNum();
             isTryingNextPort = false;
+#ifdef VK_TUNNEL
+            if (connectionType == ConnectionTypePush) {
+                setTimeout(60 * 15);
+            } else if (connectionType == ConnectionTypeUpload || connectionType == ConnectionTypeDownload) {
+                setTimeout(120);
+            } else {
+                setTimeout(90);
+            }
+#else
             if (connectionType == ConnectionTypeProxy) {
                 setTimeout(5);
             } else if (connectionType == ConnectionTypePush) {
@@ -143,6 +154,7 @@ void Connection::onReceivedData(NativeByteBuffer *buffer) {
             } else {
                 setTimeout(currentTimeout);
             }
+#endif
         }
         hasSomeDataSinceLastConnect = true;
 
@@ -365,6 +377,13 @@ void Connection::connect() {
     wasConnected = false;
     hasSomeDataSinceLastConnect = false;
     openConnection(hostAddress, hostPort, secret, ipv6 != 0, ConnectionsManager::getInstance(currentDatacenter->instanceNum).currentNetworkType);
+#ifdef VK_TUNNEL
+    if (connectionType == ConnectionTypeUpload || connectionType == ConnectionTypeDownload) {
+        setTimeout(120);
+    } else {
+        setTimeout(90);
+    }
+#else
     if (connectionType == ConnectionTypeProxy) {
         setTimeout(5);
     } else if (connectionType == ConnectionTypePush) {
@@ -386,6 +405,7 @@ void Connection::connect() {
             setTimeout(12);
         }
     }
+#endif
     connectionInProcess = false;
 }
 

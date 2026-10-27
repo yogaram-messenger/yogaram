@@ -29,6 +29,7 @@ import org.telegram.messenger.AccountInstance;
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.ApplicationLoader;
 import org.telegram.messenger.BaseController;
+import org.telegram.messenger.BuildConfig;
 import org.telegram.messenger.BuildVars;
 import org.telegram.messenger.CaptchaController;
 import org.telegram.messenger.EmuDetector;
@@ -638,7 +639,11 @@ public class ConnectionsManager extends BaseController {
             FileLog.d("selected ip strategy " + selectedStrategy);
         }
         native_setIpStrategy(currentAccount, selectedStrategy);
-        native_setNetworkAvailable(currentAccount, ApplicationLoader.isNetworkOnline(), ApplicationLoader.getCurrentNetworkType(), ApplicationLoader.isConnectionSlow());
+        boolean online = ApplicationLoader.isNetworkOnline();
+        if (BuildConfig.VK_TUNNEL && !org.telegram.messenger.vk.VkTunnel.allowNetwork()) {
+            online = false;
+        }
+        native_setNetworkAvailable(currentAccount, online, ApplicationLoader.getCurrentNetworkType(), ApplicationLoader.isConnectionSlow());
     }
 
     public void setPushConnectionEnabled(boolean value) {
@@ -646,6 +651,10 @@ public class ConnectionsManager extends BaseController {
     }
 
     public void init(int version, int layer, int apiId, String deviceModel, String systemVersion, String appVersion, String langCode, String systemLangCode, String configPath, String logPath, String regId, String cFingerprint, int timezoneOffset, long userId, boolean userPremium, boolean enablePushConnection) {
+        if (BuildConfig.VK_TUNNEL) {
+            int localPort = org.telegram.messenger.vk.VkTunnel.prepare(ApplicationLoader.applicationContext);
+            native_setProxySettings(currentAccount, "127.0.0.1", localPort, "", "", "");
+        } else {
         final SharedPreferences preferences = ApplicationLoader.applicationContext.getSharedPreferences("mainconfig", Activity.MODE_PRIVATE);
         final ProxySettings proxySettings = ProxySettings.fromSharedPreferences(preferences);
         if (preferences.getBoolean("proxy_enabled", false) && proxySettings.isValid()) {
@@ -657,6 +666,7 @@ public class ConnectionsManager extends BaseController {
                 native_setProxySettings(currentAccount, proxySettings.getAddress(), proxySettings.getPort(),
                         proxySettings.getUser(), proxySettings.getPassword(), proxySettings.getSecret());
             }
+        }
         }
         String installer = "";
         try {
@@ -934,6 +944,10 @@ public class ConnectionsManager extends BaseController {
     }
 
     public static void setProxySettings(boolean enabled, ProxySettings settings) {
+        if (BuildConfig.VK_TUNNEL) {
+            org.telegram.messenger.vk.VkTunnel.applyToConnections(ApplicationLoader.applicationContext);
+            return;
+        }
         String address = "";
         int port = 0;
         String username = "";

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="AppName">Nandagram</string>
-    <string name="AppNameBeta">Nandagram</string>
+    <string name="AppName">Nandagram VK</string>
+    <string name="AppNameBeta">Nandagram VK</string>
     <string name="LanguageName">العربية</string>
     <string name="English">الإنجليزية</string>
     <string name="LanguageNameInEnglish">Arabic</string>

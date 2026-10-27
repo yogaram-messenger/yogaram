@@ -310,6 +310,10 @@ public class FileUploadOperation {
                     maxUploadParts = MessagesController.getInstance(currentAccount).uploadMaxFilePartsPremium;
                 }
                 uploadChunkSize = (int) Math.max(slowNetwork ? minUploadChunkSlowNetworkSize : minUploadChunkSize, (totalFileSize + 1024L * maxUploadParts - 1) / (1024L * maxUploadParts));
+                if (BuildConfig.VK_TUNNEL && totalFileSize >= 512 * 1024L) {
+                    // saveFilePart stays at 512 KB. Fewer round-trips over VK.
+                    uploadChunkSize = Math.max(uploadChunkSize, 512);
+                }
                 if (1024 % uploadChunkSize != 0) {
                     int chunkSize = 64;
                     while (uploadChunkSize > chunkSize) {

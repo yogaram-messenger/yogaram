@@ -293,7 +293,12 @@ void ConnectionsManager::select() {
     }
     if (datacenter != nullptr) {
         if (datacenter->hasAuthKey(ConnectionTypeGeneric, 1)) {
+#ifdef VK_TUNNEL
+            // One keepalive per connection. 2s/19s pings would flood messages.send.
+            if (llabs(now - lastPingTime) >= 45000) {
+#else
             if (llabs(now - lastPingTime) >= (testBackend ? 2000 : 19000)) {
+#endif
                 lastPingTime = now;
                 sendPing(datacenter, false);
             }
@@ -2540,7 +2545,11 @@ void ConnectionsManager::processRequestQueue(uint32_t connectionTypes, uint32_t 
         }
 
         Connection *connection = requestDatacenter->getConnectionByType(request->connectionType, true, canUseUnboundKey);
+#ifdef VK_TUNNEL
+        int32_t maxTimeout = request->connectionType & ConnectionTypeGeneric ? 120 : 180;
+#else
         int32_t maxTimeout = request->connectionType & ConnectionTypeGeneric ? 8 : 30;
+#endif
         if (!networkAvailable || connection->getConnectionToken() == 0) {
             iter++;
             continue;

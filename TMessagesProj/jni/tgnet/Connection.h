@@ -99,7 +99,12 @@ private:
     bool connectionInProcess = false;
     uint32_t lastReconnectTimeout = 100;
     int64_t usefullDataReceiveTime;
+#ifdef VK_TUNNEL
+    // VK API round-trip is seconds. A 4s idle timer drops the socket mid-handshake.
+    uint32_t currentTimeout = 90;
+#else
     uint32_t currentTimeout = 4;
+#endif
     uint32_t receivedDataAmount = 0;
     uint32_t generation = 0;
 
